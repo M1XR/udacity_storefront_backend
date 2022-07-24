@@ -1,0 +1,1 @@
+CREATE TABLE order_products(id SERIAL PRIMARY KEY, product_id BIGINT, quantity BIGINT);
