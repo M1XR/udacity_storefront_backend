@@ -1,17 +1,14 @@
 // @ts-ignore
 import Client from '../database';
 
-export type User = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  userName: string;
-  password: string;
-  password_digest: string;
+export type Order = {
+  id?: number;
+  product_id?: string;
+  quantity?: number;
 };
 
-export class ProductStore {
-  async index(): Promise<User[]> {
+export class OrderStore {
+  async index(): Promise<Order[]> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
