@@ -36,48 +36,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var user_1 = require("../models/user");
-var store = new user_1.UserStore();
+var product_model_1 = require("../models/product.model");
+var store = new product_model_1.ProductStore();
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var users;
+    var products;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, store.index()];
             case 1:
-                users = _a.sent();
-                res.json(users);
+                products = _a.sent();
+                res.json(products);
                 return [2 /*return*/];
         }
     });
 }); };
 var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user;
+    var product;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, store.show(req.params.id)];
             case 1:
-                user = _a.sent();
-                res.json(user);
+                product = _a.sent();
+                res.json(product);
                 return [2 /*return*/];
         }
     });
 }); };
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, newUser, err_1;
+    var product, newProduct, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                user = {
-                    first_name: req.body.first_name,
-                    last_name: req.body.last_name,
-                    user_name: req.body.user_name,
-                    password: req.body.password
+                product = {
+                    id: req.body.id,
+                    name: req.body.name,
+                    price: req.body.price,
+                    category: req.body.category
                 };
-                return [4 /*yield*/, store.create(user)];
+                return [4 /*yield*/, store.create(product)];
             case 1:
-                newUser = _a.sent();
-                res.json(newUser);
+                newProduct = _a.sent();
+                res.json(newProduct);
                 return [3 /*break*/, 3];
             case 2:
                 err_1 = _a.sent();
@@ -89,22 +89,21 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, editedUser, err_2;
+    var product, editedProduct, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                user = {
+                product = {
                     id: req.body.id,
-                    first_name: req.body.first_name,
-                    last_name: req.body.last_name,
-                    user_name: req.body.user_name,
-                    password: req.body.password
+                    name: req.body.name,
+                    price: req.body.price,
+                    category: req.body.category
                 };
-                return [4 /*yield*/, store.edit(user)];
+                return [4 /*yield*/, store.edit(product)];
             case 1:
-                editedUser = _a.sent();
-                res.json(editedUser);
+                editedProduct = _a.sent();
+                res.json(editedProduct);
                 return [3 /*break*/, 3];
             case 2:
                 err_2 = _a.sent();
@@ -122,16 +121,16 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
             case 0: return [4 /*yield*/, store["delete"](req.params.id)];
             case 1:
                 deleted = _a.sent();
-                res.json(deleted);
+                res.send("Product ".concat(deleted.name, " was deleted!"));
                 return [2 /*return*/];
         }
     });
 }); };
-var userRoutes = function (app) {
-    app.get('/users', index);
-    app.get('/users/:id', show);
-    app.post('/users', create);
-    app.put('/users', edit);
-    app["delete"]('/users', destroy);
+var productRoutes = function (app) {
+    app.get('/products', index);
+    app.get('/products/:id', show);
+    app.post('/products', create);
+    app.put('/products', edit);
+    app["delete"]('/products/:id', destroy);
 };
-exports["default"] = userRoutes;
+exports["default"] = productRoutes;

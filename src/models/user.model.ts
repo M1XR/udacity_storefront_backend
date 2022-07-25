@@ -14,7 +14,7 @@ export class UserStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'SELECT * FROM products';
+      const sql = 'SELECT * FROM users';
       const result = await conn.query(sql);
       conn.release();
       return result.rows;
@@ -53,7 +53,8 @@ export class UserStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'UPDATE users SET fist_name=($2), last_name=($3), user_name=($4), password=($5) WHERE id=($1)';
+      const sql =
+        'UPDATE users SET first_name=($2), last_name=($3), user_name=($4), password=($5) WHERE id=($1) RETURNING *';
       const result = await conn.query(sql, [u.id, u.first_name, u.last_name, u.user_name, u.password]);
       conn.release();
       return result.rows[0];
@@ -66,7 +67,7 @@ export class UserStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'DELETE FROM users WHERE id=($1)';
+      const sql = 'DELETE FROM users WHERE id=($1) RETURNING *';
       const result = await conn.query(sql, [id]);
       conn.release();
       return result.rows[0];

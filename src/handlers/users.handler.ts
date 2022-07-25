@@ -39,7 +39,6 @@ const edit = async (req: Request, res: Response) => {
       user_name: req.body.user_name,
       password: req.body.password
     };
-
     const editedUser = await store.edit(user);
     res.json(editedUser);
   } catch (err) {
@@ -50,7 +49,7 @@ const edit = async (req: Request, res: Response) => {
 
 const destroy = async (req: Request, res: Response) => {
   const deleted = await store.delete(req.params.id);
-  res.json(deleted);
+  res.send(`User ${deleted.user_name} was deleted!`);
 };
 
 const userRoutes = (app: express.Application) => {
@@ -58,7 +57,7 @@ const userRoutes = (app: express.Application) => {
   app.get('/users/:id', show);
   app.post('/users', create);
   app.put('/users', edit);
-  app.delete('/users', destroy);
+  app.delete('/users/:id', destroy);
 };
 
 export default userRoutes;

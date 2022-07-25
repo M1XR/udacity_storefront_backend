@@ -51,7 +51,7 @@ export class ProductStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'UPDATE products SET name=($2), price=($3), category=($4) WHERE id=($1)';
+      const sql = 'UPDATE products SET name=($2), price=($3), category=($4) WHERE id=($1) RETURNING *';
       const result = await conn.query(sql, [p.id, p.name, p.price, p.category]);
       conn.release();
       return result.rows[0];
@@ -64,7 +64,7 @@ export class ProductStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'DELETE FROM products WHERE id=($1)';
+      const sql = 'DELETE FROM products WHERE id=($1) RETURNING *';
       const result = await conn.query(sql, [id]);
       conn.release();
       return result.rows[0];

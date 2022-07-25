@@ -39,13 +39,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.UserStore = void 0;
+exports.ProductStore = void 0;
 // @ts-ignore
 var database_1 = __importDefault(require("../database"));
-var UserStore = /** @class */ (function () {
-    function UserStore() {
+var ProductStore = /** @class */ (function () {
+    function ProductStore() {
     }
-    UserStore.prototype.index = function () {
+    ProductStore.prototype.index = function () {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, result, err_1;
             return __generator(this, function (_a) {
@@ -63,13 +63,13 @@ var UserStore = /** @class */ (function () {
                         return [2 /*return*/, result.rows];
                     case 3:
                         err_1 = _a.sent();
-                        throw new Error("Cannot get Users ".concat(err_1));
+                        throw new Error("Cannot get Products ".concat(err_1));
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    UserStore.prototype.show = function (id) {
+    ProductStore.prototype.show = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, result, err_2;
             return __generator(this, function (_a) {
@@ -79,7 +79,7 @@ var UserStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1["default"].connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'SELECT * FROM users WHERE id=($1)';
+                        sql = 'SELECT * FROM products WHERE id=($1)';
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();
@@ -87,13 +87,13 @@ var UserStore = /** @class */ (function () {
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_2 = _a.sent();
-                        throw new Error("Cannot get User ".concat(err_2));
+                        throw new Error("Cannot get Product ".concat(err_2));
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    UserStore.prototype.create = function (u) {
+    ProductStore.prototype.create = function (p) {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, result, err_3;
             return __generator(this, function (_a) {
@@ -103,21 +103,21 @@ var UserStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1["default"].connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'INSERT INTO users (first_name, last_name, user_name, password) VALUES($1, $2, $3, $4) RETURNING *';
-                        return [4 /*yield*/, conn.query(sql, [u.first_name, u.last_name, u.user_name, u.password])];
+                        sql = 'INSERT INTO products (name, price, category) VALUES($1, $2, $3) RETURNING *';
+                        return [4 /*yield*/, conn.query(sql, [p.name, p.price, p.category])];
                     case 2:
                         result = _a.sent();
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_3 = _a.sent();
-                        throw new Error("Cannot get User ".concat(err_3));
+                        throw new Error("Cannot create Product ".concat(err_3));
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    UserStore.prototype.edit = function (u) {
+    ProductStore.prototype.edit = function (p) {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, result, err_4;
             return __generator(this, function (_a) {
@@ -127,21 +127,21 @@ var UserStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1["default"].connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'UPDATE users SET fist_name=($2), last_name=($3), user_name=($4), password=($5) WHERE id=($1)';
-                        return [4 /*yield*/, conn.query(sql, [u.id, u.first_name, u.last_name, u.user_name, u.password])];
+                        sql = 'UPDATE products SET name=($2), price=($3), category=($4) WHERE id=($1) RETURNING *';
+                        return [4 /*yield*/, conn.query(sql, [p.id, p.name, p.price, p.category])];
                     case 2:
                         result = _a.sent();
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_4 = _a.sent();
-                        throw new Error("Cannot get User ".concat(err_4));
+                        throw new Error("Cannot edit Product ".concat(err_4));
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    UserStore.prototype["delete"] = function (id) {
+    ProductStore.prototype["delete"] = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, result, err_5;
             return __generator(this, function (_a) {
@@ -151,7 +151,7 @@ var UserStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1["default"].connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'DELETE FROM users WHERE id=($1)';
+                        sql = 'DELETE FROM products WHERE id=($1) RETURNING *';
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();
@@ -159,12 +159,12 @@ var UserStore = /** @class */ (function () {
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_5 = _a.sent();
-                        throw new Error("Cannot get User ".concat(err_5));
+                        throw new Error("Cannot delete Product ".concat(err_5));
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    return UserStore;
+    return ProductStore;
 }());
-exports.UserStore = UserStore;
+exports.ProductStore = ProductStore;
