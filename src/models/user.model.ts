@@ -35,6 +35,7 @@ export class UserStore {
       throw new Error(`Cannot get User ${err}`);
     }
   }
+
   async create(u: User): Promise<User> {
     try {
       // @ts-ignore
@@ -44,7 +45,7 @@ export class UserStore {
       conn.release();
       return result.rows[0];
     } catch (err) {
-      throw new Error(`Cannot get User ${err}`);
+      throw new Error(`Cannot create User ${err}`);
     }
   }
 
@@ -57,7 +58,7 @@ export class UserStore {
       conn.release();
       return result.rows[0];
     } catch (err) {
-      throw new Error(`Cannot get User ${err}`);
+      throw new Error(`Cannot edit User ${err}`);
     }
   }
 
@@ -70,7 +71,7 @@ export class UserStore {
       conn.release();
       return result.rows[0];
     } catch (err) {
-      throw new Error(`Cannot get User ${err}`);
+      throw new Error(`Cannot delete User ${err}`);
     }
   }
 }

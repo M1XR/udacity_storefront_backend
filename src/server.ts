@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import handlingBadRequest from './middleware/handlingBadRequest';
 import cors from 'cors';
-import userRoutes from './handlers/users';
+import userRoutes from './handlers/users.handler';
 
 const app: express.Application = express();
 const address: string = '0.0.0.0:3000';
