@@ -3,9 +3,9 @@ import Client from '../database';
 
 export type Product = {
   id?: number;
-  name?: string;
-  price?: number;
-  category?: string;
+  name: string;
+  price: number;
+  category: string;
 };
 
 export class ProductStore {
@@ -34,12 +34,13 @@ export class ProductStore {
       throw new Error(`Cannot get Product ${err}`);
     }
   }
+
   async create(p: Product): Promise<Product> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
       const sql =
-        'INSERT INTO products (name, price, category) VALUES($1, $2, $3) RETURNING *';
+        'INSERT INTO products(name, price, category) VALUES($1, $2, $3) RETURNING *';
       const result = await conn.query(sql, [p.name, p.price, p.category]);
       conn.release();
       return result.rows[0];
@@ -72,6 +73,33 @@ export class ProductStore {
       return result.rows[0];
     } catch (err) {
       throw new Error(`Cannot delete Product ${err}`);
+    }
+  }
+
+  async indexPopular(): Promise<Product[]> {
+    try {
+      // @ts-ignore
+      const conn = await Client.connect();
+      const sql =
+        'SELECT products.name AS Product, SUM(quantity) AS Quantity FROM shoppingcart INNER JOIN products ON shoppingcart.product_id = products.id GROUP BY products.name ORDER BY SUM(quantity) DESC LIMIT 5;';
+      const result = await conn.query(sql);
+      conn.release();
+      return result.rows;
+    } catch (err) {
+      throw new Error(`Cannot get Products ${err}`);
+    }
+  }
+
+  async byCategory(cat: string): Promise<Product[]> {
+    try {
+      // @ts-ignore
+      const conn = await Client.connect();
+      const sql = 'SELECT * FROM products WHERE category=($1)';
+      const result = await conn.query(sql, [cat]);
+      conn.release();
+      return result.rows;
+    } catch (err) {
+      throw new Error(`Cannot get Products ${err}`);
     }
   }
 }

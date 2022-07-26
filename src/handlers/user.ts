@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { User, UserStore } from '../models/user.model';
+import { User, UserStore } from '../models/user';
 
 const store = new UserStore();
 
@@ -16,9 +16,9 @@ const show = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
   try {
     const user: User = {
+      user_name: req.body.user_name,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      user_name: req.body.user_name,
       password: req.body.password
     };
 
@@ -34,9 +34,9 @@ const edit = async (req: Request, res: Response) => {
   try {
     const user: User = {
       id: req.body.id,
+      user_name: req.body.user_name,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      user_name: req.body.user_name,
       password: req.body.password
     };
     const editedUser = await store.edit(user);
@@ -53,11 +53,11 @@ const destroy = async (req: Request, res: Response) => {
 };
 
 const userRoutes = (app: express.Application) => {
-  app.get('api/users', index);
-  app.get('api/users/:id', show);
-  app.post('api/users', create);
-  app.put('api/users', edit);
-  app.delete('api/users/:id', destroy);
+  app.get('/api/users', index);
+  app.get('/api/users/:id', show);
+  app.post('/api/users', create);
+  app.put('/api/users', edit);
+  app.delete('/api/users/:id', destroy);
 };
 
 export default userRoutes;

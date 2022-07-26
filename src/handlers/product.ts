@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Product, ProductStore } from '../models/product.model';
+import { Product, ProductStore } from '../models/product';
 
 const store = new ProductStore();
 
@@ -51,12 +51,24 @@ const destroy = async (req: Request, res: Response) => {
   res.send(`Product ${deleted.name} was deleted!`);
 };
 
+const indexPopular = async (_req: Request, res: Response) => {
+  const products = await store.indexPopular();
+  res.json(products);
+};
+
+const groupByCategory = async (req: Request, res: Response) => {
+  const products = await store.byCategory(req.params.id);
+  res.json(products);
+};
+
 const productRoutes = (app: express.Application) => {
-  app.get('api/products', index);
-  app.get('api/products/:id', show);
-  app.post('api/products', create);
-  app.put('api/products', edit);
-  app.delete('api/products/:id', destroy);
+  app.get('/api/products', index);
+  app.get('/api/products/:id', show);
+  app.post('/api/products', create);
+  app.put('/api/products', edit);
+  app.delete('/api/products/:id', destroy);
+  app.get('/api/products-popular', indexPopular);
+  app.get('/api/products-category/:id', groupByCategory);
 };
 
 export default productRoutes;

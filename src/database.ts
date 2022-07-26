@@ -3,26 +3,26 @@ import { Pool } from 'pg';
 
 dotenv.config();
 
-const { POSTGRES_HOST, POSTGRES_DB, POSTGRES_DB_TEST, POSTGRES_USER, POSTGRES_PASSWORD, ENV } = process.env;
+const { PG_HOST, PG_DB, PG_DB_TEST, PG_USER, PG_PW, ENV } = process.env;
 
 let client;
 console.log(ENV);
 
 if (ENV === 'dev') {
   client = new Pool({
-    host: POSTGRES_HOST,
-    database: POSTGRES_DB,
-    user: POSTGRES_USER,
-    password: POSTGRES_PASSWORD
+    host: PG_HOST,
+    database: PG_DB,
+    user: PG_USER,
+    password: PG_PW
   });
 }
 
 if (ENV === 'test') {
   client = new Pool({
-    host: POSTGRES_HOST,
-    database: POSTGRES_DB_TEST,
-    user: POSTGRES_USER,
-    password: POSTGRES_PASSWORD
+    host: PG_HOST,
+    database: PG_DB_TEST,
+    user: PG_USER,
+    password: PG_PW
   });
 }
 

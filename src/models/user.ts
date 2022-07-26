@@ -3,10 +3,10 @@ import Client from '../database';
 
 export type User = {
   id?: number;
-  first_name?: string;
-  last_name?: string;
-  user_name?: string;
-  password?: string;
+  user_name: string;
+  first_name: string;
+  last_name: string;
+  password: string;
 };
 
 export class UserStore {
@@ -41,11 +41,11 @@ export class UserStore {
       // @ts-ignore
       const conn = await Client.connect();
       const sql =
-        'INSERT INTO users (first_name, last_name, user_name, password) VALUES($1, $2, $3, $4) RETURNING *';
+        'INSERT INTO users (user_name, first_name, last_name, password) VALUES($1, $2, $3, $4) RETURNING *';
       const result = await conn.query(sql, [
+        u.user_name,
         u.first_name,
         u.last_name,
-        u.user_name,
         u.password
       ]);
       conn.release();
@@ -60,12 +60,12 @@ export class UserStore {
       // @ts-ignore
       const conn = await Client.connect();
       const sql =
-        'UPDATE users SET first_name=($2), last_name=($3), user_name=($4), password=($5) WHERE id=($1) RETURNING *';
+        'UPDATE users SET user_name=($2), first_name=($3), last_name=($4), password=($5) WHERE id=($1) RETURNING *';
       const result = await conn.query(sql, [
         u.id,
+        u.user_name,
         u.first_name,
         u.last_name,
-        u.user_name,
         u.password
       ]);
       conn.release();
