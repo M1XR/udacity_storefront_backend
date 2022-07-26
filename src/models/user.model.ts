@@ -40,8 +40,14 @@ export class UserStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'INSERT INTO users (first_name, last_name, user_name, password) VALUES($1, $2, $3, $4) RETURNING *';
-      const result = await conn.query(sql, [u.first_name, u.last_name, u.user_name, u.password]);
+      const sql =
+        'INSERT INTO users (first_name, last_name, user_name, password) VALUES($1, $2, $3, $4) RETURNING *';
+      const result = await conn.query(sql, [
+        u.first_name,
+        u.last_name,
+        u.user_name,
+        u.password
+      ]);
       conn.release();
       return result.rows[0];
     } catch (err) {
@@ -55,7 +61,13 @@ export class UserStore {
       const conn = await Client.connect();
       const sql =
         'UPDATE users SET first_name=($2), last_name=($3), user_name=($4), password=($5) WHERE id=($1) RETURNING *';
-      const result = await conn.query(sql, [u.id, u.first_name, u.last_name, u.user_name, u.password]);
+      const result = await conn.query(sql, [
+        u.id,
+        u.first_name,
+        u.last_name,
+        u.user_name,
+        u.password
+      ]);
       conn.release();
       return result.rows[0];
     } catch (err) {

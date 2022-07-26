@@ -52,11 +52,11 @@ const destroy = async (req: Request, res: Response) => {
 };
 
 const productRoutes = (app: express.Application) => {
-  app.get('/products', index);
-  app.get('/products/:id', show);
-  app.post('/products', create);
-  app.put('/products', edit);
-  app.delete('/products/:id', destroy);
+  app.get('api/products', index);
+  app.get('api/products/:id', show);
+  app.post('api/products', create);
+  app.put('api/products', edit);
+  app.delete('api/products/:id', destroy);
 };
 
 export default productRoutes;

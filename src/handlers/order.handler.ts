@@ -50,11 +50,11 @@ const destroy = async (req: Request, res: Response) => {
 };
 
 const orderRoutes = (app: express.Application) => {
-  app.get('/orders', index);
-  app.get('/orders/:id', show);
-  app.post('/orders', create);
-  app.put('/orders', edit);
-  app.delete('/orders/:id', destroy);
+  app.get('api/orders', index);
+  app.get('api/orders/:id', show);
+  app.post('api/orders', create);
+  app.put('api/orders', edit);
+  app.delete('api/orders/:id', destroy);
 };
 
 export default orderRoutes;

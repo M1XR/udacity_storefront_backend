@@ -37,7 +37,8 @@ export class OrderStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'INSERT INTO orders (user_id, status) VALUES($1, $2) RETURNING *';
+      const sql =
+        'INSERT INTO orders (user_id, status) VALUES($1, $2) RETURNING *';
       const result = await conn.query(sql, [o.user_id, o.status]);
       conn.release();
       return result.rows[0];
@@ -50,7 +51,8 @@ export class OrderStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'UPDATE orders SET user_id=($2), status=($3) WHERE id=($1) RETURNING *';
+      const sql =
+        'UPDATE orders SET user_id=($2), status=($3) WHERE id=($1) RETURNING *';
       const result = await conn.query(sql, [o.id, o.user_id, o.status]);
       conn.release();
       return result.rows[0];

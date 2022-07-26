@@ -1,16 +1,16 @@
 {
   "dev": {
-    "driver": "pg",
-    "user": { "ENV": "POSTGRES_USER" },
-    "password": { "ENV": "POSTGRES_PASSWORD" },
-    "host": { "ENV": "POSTGRES_HOST" },
-    "database": { "ENV": "POSTGRES_DB" }
+    "driver": { "ENV": "PG_DR" },
+    "user": { "ENV": "PG_USER" },
+    "password": { "ENV": "PG_PW" },
+    "host": { "ENV": "PG_HOST" },
+    "database": { "ENV": "PG_DB" }
   },
   "test": {
-    "driver": "pg",
-    "user": { "ENV": "POSTGRES_USER" },
-    "password": { "ENV": "POSTGRES_PASSWORD" },
-    "host": { "ENV": "POSTGRES_HOST" },
-    "database": { "ENV": "POSTGRES_DB_TEST" }
+    "driver": { "ENV": "PG_DR" },
+    "user": { "ENV": "PG_USER" },
+    "password": { "ENV": "PG_PW" },
+    "host": { "ENV": "PG_HOST" },
+    "database": { "ENV": "PG_DB_TEST" }
   }
 }
