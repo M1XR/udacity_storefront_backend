@@ -8,22 +8,75 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Products
 
-- Index
-- Show
-- Create [token required]
-- [OPTIONAL] Top 5 most popular products
-- [OPTIONAL] Products by category (args: product category)
+- **Index**
+
+  - _HTTP Request Method:_ `[GET]`
+  - _Endpoint:_ `/api/products`
+
+- **Show**
+
+  - _HTTP Request Method:_ `[GET]`
+  - _Endpoint:_ `/api/products/:id`
+
+- **Create** [token required]
+
+  - _HTTP Request Method:_ `[POST]`
+  - _Endpoint:_ `/api/products`
+  - _Request Body_:
+
+  ```
+  {
+    "name": "Product",
+    "price": "100",
+    "category": "Category",
+  }
+  ```
+
+- [OPTIONAL] **Top 5 most popular products**
+
+  - _HTTP Request Method:_ `[GET]`
+  - _Endpoint:_ `/api/products/popular`
+
+- [OPTIONAL] **Products by category** (args: product category)
+  - _HTTP Request Method:_ `[GET]`
+  - _Endpoint:_ `/api/products/category/:category`
 
 #### Users
 
-- Index [token required]
-- Show [token required]
-- Create N[token required]
+- **Index** [token required]
+
+  - _HTTP Request Method:_ `[GET]`
+  - _Endpoint:_ `/api/users`
+
+- **Show** [token required]
+
+  - _HTTP Request Method:_ `[GET]`
+  - _Endpoint:_ `/api/users/:id`
+
+- **Create** [token required]
+  - _HTTP Request Method:_ `[POST]`
+  - _Endpoint:_ `/api/users`
+  - _Request Body_:
+  ```
+  {
+    "user_name": "User",
+    "first_name": "First",
+    "last_name": "Last",
+    "password": "password"
+  }
+  ```
 
 #### Orders
 
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+- **Current Order by user** (args: user id) [token required]
+
+  - _HTTP Request Method:_ `[GET]`
+  - _Endpoint:_ `/api/orders/current/:user_id`
+
+- [OPTIONAL] **Completed Orders by user** (args: user id) [token required]
+
+  - _HTTP Request Method:_ `[GET]`
+  - _Endpoint:_ `/api/orders/completed/:user_id`
 
 ## Data Shapes
 
@@ -34,6 +87,10 @@ These are the notes from a meeting with the frontend developer that describe wha
 - price
 - [OPTIONAL] category
 
+| \_id               | name         | price   | category     |
+| ------------------ | ------------ | ------- | ------------ |
+| SERIAL PRIMARY KEY | VARCHAR(200) | INTEGER | VARCHAR(200) |
+
 #### User
 
 - id
@@ -41,10 +98,27 @@ These are the notes from a meeting with the frontend developer that describe wha
 - lastName
 - password
 
+| \_id               | user_name   | first_name  | last_name   | password    |
+| ------------------ | ----------- | ----------- | ----------- | ----------- |
+| SERIAL PRIMARY KEY | VARCHAR(50) | VARCHAR(50) | VARCHAR(50) | VARCHAR(80) |
+
 #### Orders
 
 - id
-- id of each product in the order
-- quantity of each product in the order
 - user_id
 - status of order (active or complete)
+
+| \_id               | user_id                       | status     |
+| ------------------ | ----------------------------- | ---------- |
+| SERIAL PRIMARY KEY | BIGINT REFERENCES users(\_id) | VARCHAR(8) |
+
+#### Shoppingcart
+
+- id
+- order_id
+- id of each product in the order
+- quantity of each product in the order
+
+| \_id               | order_id                       | product_id                      | quantity |
+| ------------------ | ------------------------------ | ------------------------------- | -------- |
+| SERIAL PRIMARY KEY | BIGINT REFERENCES orders(\_id) | BIGINT REFERENCES product(\_id) | INTEGER  |
