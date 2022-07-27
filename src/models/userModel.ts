@@ -1,5 +1,6 @@
 // @ts-ignore
 import Client from '../database';
+import bcrypt from 'bcrypt';
 
 export type User = {
   id?: number;
@@ -42,11 +43,12 @@ export class UserStore {
       const conn = await Client.connect();
       const sql =
         'INSERT INTO users (user_name, first_name, last_name, password) VALUES($1, $2, $3, $4) RETURNING *';
+      const hash = bcrypt.hashSync(u.password + pepper, parseInt(saltRounds));
       const result = await conn.query(sql, [
         u.user_name,
         u.first_name,
         u.last_name,
-        u.password
+        hash
       ]);
       conn.release();
       return result.rows[0];
