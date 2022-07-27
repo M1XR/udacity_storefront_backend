@@ -1,6 +1,9 @@
 # build
 build
 
+# sample data
+sample_data
+
 # Logs
 logs
 *.log
