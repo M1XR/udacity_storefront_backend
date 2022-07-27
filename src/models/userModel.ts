@@ -1,6 +1,11 @@
 // @ts-ignore
 import Client from '../database';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const { BCRYPT_PW, SALT_ROUNDS } = process.env;
 
 export type User = {
   id?: number;
@@ -41,15 +46,9 @@ export class UserStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql =
-        'INSERT INTO users (user_name, first_name, last_name, password) VALUES($1, $2, $3, $4) RETURNING *';
-      const hash = bcrypt.hashSync(u.password + pepper, parseInt(saltRounds));
-      const result = await conn.query(sql, [
-        u.user_name,
-        u.first_name,
-        u.last_name,
-        hash
-      ]);
+      const sql = 'INSERT INTO users (user_name, first_name, last_name, password) VALUES($1, $2, $3, $4) RETURNING *';
+      const hash = bcrypt.hashSync(u.password + BCRYPT_PW, parseInt(SALT_ROUNDS as string));
+      const result = await conn.query(sql, [u.user_name, u.first_name, u.last_name, hash]);
       conn.release();
       return result.rows[0];
     } catch (err) {
@@ -63,13 +62,7 @@ export class UserStore {
       const conn = await Client.connect();
       const sql =
         'UPDATE users SET user_name=($2), first_name=($3), last_name=($4), password=($5) WHERE id=($1) RETURNING *';
-      const result = await conn.query(sql, [
-        u.id,
-        u.user_name,
-        u.first_name,
-        u.last_name,
-        u.password
-      ]);
+      const result = await conn.query(sql, [u.id, u.user_name, u.first_name, u.last_name, u.password]);
       conn.release();
       return result.rows[0];
     } catch (err) {
