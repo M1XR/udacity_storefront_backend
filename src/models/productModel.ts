@@ -39,8 +39,7 @@ export class ProductStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql =
-        'INSERT INTO products(name, price, category) VALUES($1, $2, $3) RETURNING *';
+      const sql = 'INSERT INTO products(name, price, category) VALUES($1, $2, $3) RETURNING *';
       const result = await conn.query(sql, [p.name, p.price, p.category]);
       conn.release();
       return result.rows[0];
@@ -53,8 +52,7 @@ export class ProductStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql =
-        'UPDATE products SET name=($2), price=($3), category=($4) WHERE id=($1) RETURNING *';
+      const sql = 'UPDATE products SET name=($2), price=($3), category=($4) WHERE id=($1) RETURNING *';
       const result = await conn.query(sql, [p.id, p.name, p.price, p.category]);
       conn.release();
       return result.rows[0];
@@ -81,7 +79,7 @@ export class ProductStore {
       // @ts-ignore
       const conn = await Client.connect();
       const sql =
-        'SELECT products.name AS Product, SUM(quantity) AS Quantity FROM shoppingcart INNER JOIN products ON shoppingcart.product_id = products.id GROUP BY products.name ORDER BY SUM(quantity) DESC LIMIT 5;';
+        'SELECT products.name AS Product, SUM(quantity) AS Quantity FROM cart INNER JOIN products ON cart.product_id = products.id GROUP BY products.name ORDER BY SUM(quantity) DESC LIMIT 5;';
       const result = await conn.query(sql);
       conn.release();
       return result.rows;

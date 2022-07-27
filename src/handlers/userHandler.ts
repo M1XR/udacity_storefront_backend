@@ -1,16 +1,31 @@
 import express, { Request, Response } from 'express';
 import { User, UserStore } from '../models/userModel';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
+const { TOKEN_SECRET } = process.env;
 
 const store = new UserStore();
 
 const index = async (_req: Request, res: Response) => {
-  const users = await store.index();
-  res.json(users);
+  try {
+    const users = await store.index();
+    res.json(users);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
 };
 
 const show = async (req: Request, res: Response) => {
-  const user = await store.show(req.params.id);
-  res.json(user);
+  try {
+    const user = await store.show(req.params.id);
+    res.json(user);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
 };
 
 const create = async (req: Request, res: Response) => {
@@ -23,7 +38,8 @@ const create = async (req: Request, res: Response) => {
     };
 
     const newUser = await store.create(user);
-    res.json(newUser);
+    const token = jwt.sign({ user: newUser }, TOKEN_SECRET as string);
+    res.json(token);
   } catch (err) {
     res.status(400);
     res.json(err);
@@ -39,6 +55,7 @@ const edit = async (req: Request, res: Response) => {
       last_name: req.body.last_name,
       password: req.body.password
     };
+
     const editedUser = await store.edit(user);
     res.json(editedUser);
   } catch (err) {
@@ -48,8 +65,13 @@ const edit = async (req: Request, res: Response) => {
 };
 
 const destroy = async (req: Request, res: Response) => {
-  const deleted = await store.delete(req.params.id);
-  res.send(`User ${deleted.user_name} was deleted!`);
+  try {
+    const deleted = await store.delete(req.params.id);
+    res.send(`User ${deleted.user_name} was deleted!`);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
 };
 
 const userRoutes = (app: express.Application) => {

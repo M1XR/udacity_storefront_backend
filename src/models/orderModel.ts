@@ -38,8 +38,7 @@ export class OrderStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql =
-        'INSERT INTO orders (user_id, status) VALUES($1, $2) RETURNING *';
+      const sql = 'INSERT INTO orders (user_id, status) VALUES($1, $2) RETURNING *';
       const result = await conn.query(sql, [o.user_id, o.status]);
       conn.release();
       return result.rows[0];
@@ -52,8 +51,7 @@ export class OrderStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql =
-        'UPDATE orders SET user_id=($2), status=($3) WHERE id=($1) RETURNING *';
+      const sql = 'UPDATE orders SET user_id=($2), status=($3) WHERE id=($1) RETURNING *';
       const result = await conn.query(sql, [o.id, o.user_id, o.status]);
       conn.release();
       return result.rows[0];
@@ -75,12 +73,12 @@ export class OrderStore {
     }
   }
 
-  async currentOrders(): Promise<Order[]> {
+  async currentOrders(id: string): Promise<Order[]> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'SELECT * FROM orders WHERE status=($1)';
-      const result = await conn.query(sql, ['active']);
+      const sql = 'SELECT * FROM orders WHERE status=($1) AND user_id=($2)';
+      const result = await conn.query(sql, ['active', id]);
       conn.release();
       return result.rows;
     } catch (err) {
@@ -88,12 +86,12 @@ export class OrderStore {
     }
   }
 
-  async completeOrders(): Promise<Order[]> {
+  async completeOrders(id: string): Promise<Order[]> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'SELECT * FROM orders WHERE status=($1)';
-      const result = await conn.query(sql, ['complete']);
+      const sql = 'SELECT * FROM orders WHERE status=($1) AND user_id=($2)';
+      const result = await conn.query(sql, ['complete', id]);
       conn.release();
       return result.rows;
     } catch (err) {

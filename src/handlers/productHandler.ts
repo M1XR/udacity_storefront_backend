@@ -3,20 +3,29 @@ import { Product, ProductStore } from '../models/productModel';
 
 const store = new ProductStore();
 
-const index = async (_req: Request, res: Response) => {
-  const products = await store.index();
-  res.json(products);
+const index = async (req: Request, res: Response) => {
+  try {
+    const products = await store.index();
+    res.json(products);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
 };
 
 const show = async (req: Request, res: Response) => {
-  const product = await store.show(req.params.id);
-  res.json(product);
+  try {
+    const product = await store.show(req.params.id);
+    res.json(product);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
 };
 
 const create = async (req: Request, res: Response) => {
   try {
     const product: Product = {
-      id: req.body.id,
       name: req.body.name,
       price: req.body.price,
       category: req.body.category
@@ -47,18 +56,33 @@ const edit = async (req: Request, res: Response) => {
 };
 
 const destroy = async (req: Request, res: Response) => {
-  const deleted = await store.delete(req.params.id);
-  res.send(`Product ${deleted.name} was deleted!`);
+  try {
+    const deleted = await store.delete(req.params.id);
+    res.send(`Product ${deleted.name} was deleted!`);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
 };
 
 const indexPopular = async (_req: Request, res: Response) => {
-  const products = await store.indexPopular();
-  res.json(products);
+  try {
+    const products = await store.indexPopular();
+    res.json(products);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
 };
 
 const groupByCategory = async (req: Request, res: Response) => {
-  const products = await store.byCategory(req.params.category);
-  res.json(products);
+  try {
+    const products = await store.byCategory(req.params.category);
+    res.json(products);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
 };
 
 const productRoutes = (app: express.Application) => {

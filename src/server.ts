@@ -5,7 +5,7 @@ import cors from 'cors';
 import userRoutes from './handlers/userHandler';
 import productRoutes from './handlers/productHandler';
 import orderRoutes from './handlers/orderHandler';
-import cartRoutes from './handlers/shoppingcartHandler';
+import cartRoutes from './handlers/cartHandler';
 
 const app: express.Application = express();
 const address: string = '0.0.0.0:3000';
