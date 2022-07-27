@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Product, ProductStore } from '../models/product';
+import { Product, ProductStore } from '../models/productModel';
 
 const store = new ProductStore();
 
@@ -57,7 +57,7 @@ const indexPopular = async (_req: Request, res: Response) => {
 };
 
 const groupByCategory = async (req: Request, res: Response) => {
-  const products = await store.byCategory(req.params.id);
+  const products = await store.byCategory(req.params.category);
   res.json(products);
 };
 
@@ -68,7 +68,7 @@ const productRoutes = (app: express.Application) => {
   app.put('/api/products', edit);
   app.delete('/api/products/:id', destroy);
   app.get('/api/products-popular', indexPopular);
-  app.get('/api/products-category/:id', groupByCategory);
+  app.get('/api/products-category/:category', groupByCategory);
 };
 
 export default productRoutes;

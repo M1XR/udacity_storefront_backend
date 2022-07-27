@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Order, OrderStore } from '../models/order';
+import { Order, OrderStore } from '../models/orderModel';
 
 const store = new OrderStore();
 
@@ -47,12 +47,24 @@ const destroy = async (req: Request, res: Response) => {
   res.send(`Order ${deleted.id} was deleted!`);
 };
 
+const current = async (_req: Request, res: Response) => {
+  const orders = await store.currentOrders();
+  res.json(orders);
+};
+
+const complete = async (_req: Request, res: Response) => {
+  const orders = await store.completeOrders();
+  res.json(orders);
+};
+
 const orderRoutes = (app: express.Application) => {
   app.get('/api/orders', index);
   app.get('/api/orders/:id', show);
   app.post('/api/orders', create);
   app.put('/api/orders', edit);
   app.delete('/api/orders/:id', destroy);
+  app.get('/api/orders-current', current);
+  app.get('/api/orders-complete', complete);
 };
 
 export default orderRoutes;

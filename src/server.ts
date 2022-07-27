@@ -2,10 +2,10 @@ import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import handlingBadRequest from './middleware/handlingBadRequest';
 import cors from 'cors';
-import userRoutes from './handlers/user';
-import productRoutes from './handlers/product';
-import orderRoutes from './handlers/order';
-import cartRoutes from './handlers/shoppingcart';
+import userRoutes from './handlers/userHandler';
+import productRoutes from './handlers/productHandler';
+import orderRoutes from './handlers/orderHandler';
+import cartRoutes from './handlers/shoppingcartHandler';
 
 const app: express.Application = express();
 const address: string = '0.0.0.0:3000';

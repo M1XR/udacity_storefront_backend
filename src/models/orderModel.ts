@@ -33,6 +33,7 @@ export class OrderStore {
       throw new Error(`Cannot get Order ${err}`);
     }
   }
+
   async create(o: Order): Promise<Order> {
     try {
       // @ts-ignore
@@ -71,6 +72,32 @@ export class OrderStore {
       return result.rows[0];
     } catch (err) {
       throw new Error(`Cannot delete Order ${err}`);
+    }
+  }
+
+  async currentOrders(): Promise<Order[]> {
+    try {
+      // @ts-ignore
+      const conn = await Client.connect();
+      const sql = 'SELECT * FROM orders WHERE status=($1)';
+      const result = await conn.query(sql, ['active']);
+      conn.release();
+      return result.rows;
+    } catch (err) {
+      throw new Error(`Cannot get Order ${err}`);
+    }
+  }
+
+  async completeOrders(): Promise<Order[]> {
+    try {
+      // @ts-ignore
+      const conn = await Client.connect();
+      const sql = 'SELECT * FROM orders WHERE status=($1)';
+      const result = await conn.query(sql, ['complete']);
+      conn.release();
+      return result.rows;
+    } catch (err) {
+      throw new Error(`Cannot get Order ${err}`);
     }
   }
 }

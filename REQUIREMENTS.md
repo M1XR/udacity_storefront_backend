@@ -35,11 +35,11 @@ These are the notes from a meeting with the frontend developer that describe wha
 - [OPTIONAL] **Top 5 most popular products**
 
   - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/products/popular`
+  - _Endpoint:_ `/api/products-popular`
 
 - [OPTIONAL] **Products by category** (args: product category)
   - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/products/category/:category`
+  - _Endpoint:_ `/api/products-category/:category`
 
 #### Users
 
@@ -71,12 +71,12 @@ These are the notes from a meeting with the frontend developer that describe wha
 - **Current Order by user** (args: user id) [token required]
 
   - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/orders/current/:user_id`
+  - _Endpoint:_ `/api/orders-current/:user_id`
 
 - [OPTIONAL] **Completed Orders by user** (args: user id) [token required]
 
   - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/orders/completed/:user_id`
+  - _Endpoint:_ `/api/orders-completed/:user_id`
 
 ## Data Shapes
 
@@ -87,7 +87,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - price
 - [OPTIONAL] category
 
-| \_id               | name         | price   | category     |
+| id                 | name         | price   | category     |
 | ------------------ | ------------ | ------- | ------------ |
 | SERIAL PRIMARY KEY | VARCHAR(200) | INTEGER | VARCHAR(200) |
 
@@ -98,7 +98,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - lastName
 - password
 
-| \_id               | user_name   | first_name  | last_name   | password    |
+| id                 | user_name   | first_name  | last_name   | password    |
 | ------------------ | ----------- | ----------- | ----------- | ----------- |
 | SERIAL PRIMARY KEY | VARCHAR(50) | VARCHAR(50) | VARCHAR(50) | VARCHAR(80) |
 
@@ -108,9 +108,9 @@ These are the notes from a meeting with the frontend developer that describe wha
 - user_id
 - status of order (active or complete)
 
-| \_id               | user_id                       | status     |
-| ------------------ | ----------------------------- | ---------- |
-| SERIAL PRIMARY KEY | BIGINT REFERENCES users(\_id) | VARCHAR(8) |
+| id                 | user_id                     | status     |
+| ------------------ | --------------------------- | ---------- |
+| SERIAL PRIMARY KEY | BIGINT REFERENCES users(id) | VARCHAR(8) |
 
 #### Shoppingcart
 
@@ -119,6 +119,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 - id of each product in the order
 - quantity of each product in the order
 
-| \_id               | order_id                       | product_id                      | quantity |
-| ------------------ | ------------------------------ | ------------------------------- | -------- |
-| SERIAL PRIMARY KEY | BIGINT REFERENCES orders(\_id) | BIGINT REFERENCES product(\_id) | INTEGER  |
+| id                 | order_id                     | product_id                    | quantity |
+| ------------------ | ---------------------------- | ----------------------------- | -------- |
+| SERIAL PRIMARY KEY | BIGINT REFERENCES orders(id) | BIGINT REFERENCES product(id) | INTEGER  |

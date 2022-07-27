@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Cart, CartStore } from '../models/shoppingcart';
+import { Cart, CartStore } from '../models/shoppingcartModel';
 
 const store = new CartStore();
 
