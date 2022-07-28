@@ -2,10 +2,9 @@ import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import handlingBadRequest from './middleware/handlingBadRequest';
 import cors from 'cors';
-import userRoutes from './handlers/userHandler';
-import productRoutes from './handlers/productHandler';
-import orderRoutes from './handlers/orderHandler';
-import cartRoutes from './handlers/cartHandler';
+import userRoutes from './handlers/user.handler';
+import productRoutes from './handlers/product.handler';
+import orderRoutes from './handlers/order.handler';
 
 const app: express.Application = express();
 const address: string = '0.0.0.0:3000';
@@ -15,7 +14,6 @@ app.use(bodyParser.json());
 userRoutes(app);
 productRoutes(app);
 orderRoutes(app);
-cartRoutes(app);
 app.use(handlingBadRequest);
 
 app.listen(3000, (): void => {

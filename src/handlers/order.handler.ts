@@ -1,27 +1,8 @@
 import express, { Request, Response } from 'express';
-import { Order, OrderStore } from '../models/orderModel';
+import { Order, OrderStore } from '../models/order.model';
+import verifyOrderStatus from '../middleware/verifyOrderStatus';
 
 const store = new OrderStore();
-
-const index = async (_req: Request, res: Response) => {
-  try {
-    const orders = await store.index();
-    res.json(orders);
-  } catch (err) {
-    res.status(400);
-    res.json(err);
-  }
-};
-
-const show = async (req: Request, res: Response) => {
-  try {
-    const orders = await store.show(req.params.id);
-    res.json(orders);
-  } catch (err) {
-    res.status(400);
-    res.json(err);
-  }
-};
 
 const create = async (req: Request, res: Response) => {
   try {
@@ -62,6 +43,20 @@ const destroy = async (req: Request, res: Response) => {
   }
 };
 
+const addProduct = async (req: Request, res: Response) => {
+  const orderId: string = req.params.id;
+  const productId: string = req.body.product_id;
+  const quantity: number = req.body.quantity;
+
+  try {
+    const addedProduct = await store.addProduct(orderId, productId, quantity);
+    res.json(addProduct);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
+};
+
 const current = async (req: Request, res: Response) => {
   try {
     const orders = await store.currentOrders(req.params.id);
@@ -72,9 +67,9 @@ const current = async (req: Request, res: Response) => {
   }
 };
 
-const complete = async (req: Request, res: Response) => {
+const completed = async (req: Request, res: Response) => {
   try {
-    const orders = await store.completeOrders(req.params.id);
+    const orders = await store.completedOrders(req.params.id);
     res.json(orders);
   } catch (err) {
     res.status(400);
@@ -83,13 +78,12 @@ const complete = async (req: Request, res: Response) => {
 };
 
 const orderRoutes = (app: express.Application) => {
-  app.get('/api/orders', index);
-  app.get('/api/orders/:id', show);
   app.post('/api/orders', create);
   app.put('/api/orders', edit);
   app.delete('/api/orders/:id', destroy);
+  app.post('/api/orders/:id/products', verifyOrderStatus, addProduct);
   app.get('/api/orders-current/:id', current);
-  app.get('/api/orders-complete/:id', complete);
+  app.get('/api/orders-complete/:id', completed);
 };
 
 export default orderRoutes;

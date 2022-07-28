@@ -10,59 +10,62 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 - **Index**
 
-  - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/products`
+  - `[GET]`
+  - `/api/products`
 
 - **Show**
 
-  - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/products/:id`
+  - `[GET]`
+  - `/api/products/:id`
 
 - **Create** [token required]
 
-  - _HTTP Request Method:_ `[POST]`
-  - _Endpoint:_ `/api/products`
-  - _Request Body_:
+  - `[POST]`
+  - `/api/products`
+  - Request Body:
 
   ```
   {
-    "name": "Product",
-    "price": "100",
-    "category": "Category",
+    "name": string,
+    "price": number,
+    "category": string,
   }
   ```
 
-- [OPTIONAL] **Top 5 most popular products**
+- **Top 5 most popular products**
 
-  - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/products-popular`
+  - `[GET]`
+  - `/api/products-popular`
 
-- [OPTIONAL] **Products by category** (args: product category)
-  - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/products-category/:category`
+- **Products by category** (args: product category)
+
+  - `[GET]`
+  - `/api/products-category/:category`
 
 #### Users
 
 - **Index** [token required]
 
-  - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/users`
+  - `[GET]`
+  - `/api/users`
 
 - **Show** [token required]
 
-  - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/users/:id`
+  - `[GET]`
+  - `/api/users/:id`
 
 - **Create** [token required]
-  - _HTTP Request Method:_ `[POST]`
-  - _Endpoint:_ `/api/users`
-  - _Request Body_:
+
+  - `[POST]`
+  - `/api/users`
+  - Request Body:
+
   ```
   {
-    "user_name": "User",
-    "first_name": "First",
-    "last_name": "Last",
-    "password": "password"
+    "user_name": string,
+    "first_name": string,
+    "last_name": string,
+    "password": string
   }
   ```
 
@@ -70,54 +73,35 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 - **Current Order by user** (args: user id) [token required]
 
-  - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/orders-current/:user_id`
+  - `[GET]`
+  - `/api/orders-current/:user_id`
 
-- [OPTIONAL] **Completed Orders by user** (args: user id) [token required]
+- **Completed Orders by user** (args: user id) [token required]
 
-  - _HTTP Request Method:_ `[GET]`
-  - _Endpoint:_ `/api/orders-completed/:user_id`
+  - `[GET]`
+  - `/api/orders-completed/:user_id`
 
 ## Data Shapes
 
-#### Product
-
-- id
-- name
-- price
-- [OPTIONAL] category
+#### products
 
 | id                 | name         | price   | category     |
 | ------------------ | ------------ | ------- | ------------ |
 | SERIAL PRIMARY KEY | VARCHAR(200) | INTEGER | VARCHAR(200) |
 
-#### User
-
-- id
-- firstName
-- lastName
-- password
+#### users
 
 | id                 | user_name   | first_name  | last_name   | password    |
 | ------------------ | ----------- | ----------- | ----------- | ----------- |
 | SERIAL PRIMARY KEY | VARCHAR(50) | VARCHAR(50) | VARCHAR(50) | VARCHAR(80) |
 
-#### Orders
-
-- id
-- user_id
-- status of order (active or complete)
+#### orders
 
 | id                 | user_id                     | status     |
 | ------------------ | --------------------------- | ---------- |
 | SERIAL PRIMARY KEY | BIGINT REFERENCES users(id) | VARCHAR(8) |
 
-#### Shoppingcart
-
-- id
-- order_id
-- id of each product in the order
-- quantity of each product in the order
+#### order_products (Join-Table)
 
 | id                 | order_id                     | product_id                    | quantity |
 | ------------------ | ---------------------------- | ----------------------------- | -------- |
