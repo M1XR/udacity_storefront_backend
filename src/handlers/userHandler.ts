@@ -74,12 +74,23 @@ const destroy = async (req: Request, res: Response) => {
   }
 };
 
+const authenticate = async (req: Request, res: Response) => {
+  try {
+    const auth = await store.authenticate(req.body.user_name, req.body.password);
+    res.send(auth);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
+};
+
 const userRoutes = (app: express.Application) => {
   app.get('/api/users', index);
   app.get('/api/users/:id', show);
   app.post('/api/users', create);
   app.put('/api/users', edit);
   app.delete('/api/users/:id', destroy);
+  app.get('/api/auth', authenticate);
 };
 
 export default userRoutes;

@@ -2,6 +2,7 @@
 import Client from '../database';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import { connect } from 'http2';
 
 dotenv.config();
 const { BCRYPT_PW, SALT_ROUNDS } = process.env;
@@ -84,21 +85,29 @@ export class UserStore {
     }
   }
 
-  async authenticate(user_name: string, password: string): Promise<User | null> {
+  async authenticate(user_name: string, password: string): Promise<User | string> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
       const sql = 'SELECT password_digest FROM users WHERE user_name=($1)';
       const result = await conn.query(sql, [user_name]);
+      conn.release();
+
+      console.log(password + BCRYPT_PW);
+      console.log(result.rows[0]);
 
       if (result.rows.length) {
-        const user = result.row[0];
+        const user = result.rows[0];
+
+        console.log(user);
+        console.log(user.password_digest);
 
         if (bcrypt.compareSync(password + BCRYPT_PW, user.password_digest)) {
+          console.log('bcrypt compare');
           return user;
         }
       }
-      return null;
+      return 'Authentification failed';
     } catch (err) {
       throw new Error(`Cannot authenticate User ${err}`);
     }

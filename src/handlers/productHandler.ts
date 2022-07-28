@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { Product, ProductStore } from '../models/productModel';
+import verifyAuthToken from '../middleware/verifyAuthToken';
 
 const store = new ProductStore();
 
@@ -86,7 +87,7 @@ const groupByCategory = async (req: Request, res: Response) => {
 };
 
 const productRoutes = (app: express.Application) => {
-  app.get('/api/products', index);
+  app.get('/api/products', verifyAuthToken, index);
   app.get('/api/products/:id', show);
   app.post('/api/products', create);
   app.put('/api/products', edit);
