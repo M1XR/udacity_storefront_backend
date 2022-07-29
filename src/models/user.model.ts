@@ -3,6 +3,7 @@ import Client from '../database';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 
+// import environment variables
 dotenv.config();
 const { BCRYPT_PW, SALT_ROUNDS } = process.env;
 
@@ -15,6 +16,8 @@ export type User = {
 };
 
 export class UserStore {
+  // get all users
+  // ordered by last_name ascending
   async index(): Promise<User[]> {
     try {
       // @ts-ignore
@@ -28,6 +31,7 @@ export class UserStore {
     }
   }
 
+  // get specific user by id
   async show(id: string): Promise<User> {
     try {
       // @ts-ignore
@@ -41,13 +45,17 @@ export class UserStore {
     }
   }
 
+  // create new user
   async create(u: User): Promise<User> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
       const sql =
         'INSERT INTO users (user_name, first_name, last_name, password_digest) VALUES($1, $2, $3, $4) RETURNING *';
+
+      // password hashing
       const hash = bcrypt.hashSync(u.password + BCRYPT_PW, parseInt(SALT_ROUNDS as string));
+
       const result = await conn.query(sql, [u.user_name, u.first_name, u.last_name, hash]);
       conn.release();
       return result.rows[0];
@@ -56,6 +64,7 @@ export class UserStore {
     }
   }
 
+  // authenticate user with user_name and password
   async authenticate(user_name: string, password: string): Promise<User | string> {
     try {
       // @ts-ignore
@@ -64,6 +73,7 @@ export class UserStore {
       const result = await conn.query(sql, [user_name]);
       conn.release();
 
+      // password authentication with bcrypt if user_name exist in db
       if (result.rows.length) {
         const user = result.rows[0];
 

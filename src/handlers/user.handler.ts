@@ -4,11 +4,13 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import verifyAuthToken from '../middleware/verifyAuthToken';
 
+// import environment variables
 dotenv.config();
 const { TOKEN_SECRET } = process.env;
 
 const store = new UserStore();
 
+// get all users
 const index = async (_req: Request, res: Response) => {
   try {
     const users = await store.index();
@@ -19,6 +21,7 @@ const index = async (_req: Request, res: Response) => {
   }
 };
 
+// get specific user by id
 const show = async (req: Request, res: Response) => {
   try {
     const user = await store.show(req.params.id);
@@ -29,6 +32,7 @@ const show = async (req: Request, res: Response) => {
   }
 };
 
+// create new user
 const create = async (req: Request, res: Response) => {
   try {
     const user: User = {
@@ -39,7 +43,10 @@ const create = async (req: Request, res: Response) => {
     };
 
     const newUser = await store.create(user);
+
+    // generate user token
     const token = jwt.sign({ user: newUser }, TOKEN_SECRET as string);
+
     res.json(token);
   } catch (err) {
     res.status(400);
@@ -47,6 +54,7 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
+// authenticate user with user_name and password
 const authenticate = async (req: Request, res: Response) => {
   try {
     const auth = await store.authenticate(req.body.user_name, req.body.password);
@@ -58,10 +66,10 @@ const authenticate = async (req: Request, res: Response) => {
 };
 
 const userRoutes = (app: express.Application) => {
-  app.get('/api/users', verifyAuthToken, index);
-  app.get('/api/users/:id', verifyAuthToken, show);
-  app.post('/api/users', create);
-  app.get('/api/auth', verifyAuthToken, authenticate);
+  app.get('/users/auth', verifyAuthToken, authenticate);
+  app.get('/users', verifyAuthToken, index);
+  app.get('/users/:id', verifyAuthToken, show);
+  app.post('/users', create);
 };
 
 export default userRoutes;
