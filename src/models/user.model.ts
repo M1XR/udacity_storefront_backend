@@ -9,10 +9,11 @@ const { BCRYPT_PW, SALT_ROUNDS } = process.env;
 
 export type User = {
   id?: number;
-  user_name: string;
+  user_name?: string;
   first_name?: string;
   last_name?: string;
-  password: string;
+  password?: string;
+  password_digest?: string;
 };
 
 export class UserStore {
@@ -54,7 +55,8 @@ export class UserStore {
         'INSERT INTO users (user_name, first_name, last_name, password_digest) VALUES($1, $2, $3, $4) RETURNING *';
 
       // password hashing
-      const hash = bcrypt.hashSync(u.password + BCRYPT_PW, parseInt(SALT_ROUNDS as string));
+      const pw = u.password as string;
+      const hash = bcrypt.hashSync(pw + BCRYPT_PW, parseInt(SALT_ROUNDS as string));
 
       const result = await conn.query(sql, [u.user_name, u.first_name, u.last_name, hash]);
       conn.release();
@@ -65,7 +67,7 @@ export class UserStore {
   }
 
   // authenticate user with user_name and password
-  async authenticate(user_name: string, password: string): Promise<User | string> {
+  async authenticate(user_name: string, password: string): Promise<{ password_digest: string } | string> {
     try {
       // @ts-ignore
       const conn = await Client.connect();

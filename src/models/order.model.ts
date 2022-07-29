@@ -3,7 +3,7 @@ import Client from '../database';
 
 export type Order = {
   id?: number;
-  user_id?: number;
+  user_id?: string;
   status?: string;
 };
 
@@ -82,7 +82,7 @@ export class OrderStore {
       const sql = 'DELETE FROM order_products WHERE order_id=($1) AND product_id=($2)';
       const result = await conn.query(sql, [order_id, product_id]);
       conn.release();
-      return `Product ${product_id} was deleted from Order ${order_id}`;
+      return `Product ${product_id} was deleted from Order ${order_id} / ${result}`;
     } catch (err) {
       throw new Error(`Cannot delete Order ${err}`);
     }
@@ -93,11 +93,11 @@ export class OrderStore {
     {
       order_id: string;
       user_name: string;
-      user_id: string;
+      user_id: number;
       name: string;
       product_id: string;
-      price: number;
-      quantity: number;
+      price: string;
+      quantity: string;
       sum_price: number;
     }[]
   > {
@@ -119,11 +119,11 @@ export class OrderStore {
     {
       order_id: string;
       user_name: string;
-      user_id: string;
+      user_id: number;
       name: string;
       product_id: string;
-      price: number;
-      quantity: number;
+      price: string;
+      quantity: string;
       sum_price: number;
     }[]
   > {

@@ -47,7 +47,7 @@ const create = async (req: Request, res: Response) => {
     // generate user token
     const token = jwt.sign({ user: newUser }, TOKEN_SECRET as string);
 
-    res.json(token);
+    res.send(token);
   } catch (err) {
     res.status(400);
     res.json(err);

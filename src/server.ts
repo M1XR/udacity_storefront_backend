@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import handlingBadRequest from './middleware/handlingBadRequest';
 import cors from 'cors';
@@ -19,3 +19,5 @@ app.use(handlingBadRequest);
 app.listen(3000, (): void => {
   console.log(`starting CORS-enabled web server app on: ${address}`);
 });
+
+export default app;
