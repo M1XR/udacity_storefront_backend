@@ -3,53 +3,44 @@ import Client from '../database';
 
 export type Order = {
   id?: number;
-  user_id: number;
-  status: string;
+  user_id?: number;
+  status?: string;
 };
 
 export class OrderStore {
+  // create new order with status='active'
   async create(o: Order): Promise<Order> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
       const sql = 'INSERT INTO orders (user_id, status) VALUES($1, $2) RETURNING *';
-      const result = await conn.query(sql, [o.user_id, o.status]);
+      const result = await conn.query(sql, [o.user_id, 'active']);
       conn.release();
       return result.rows[0];
     } catch (err) {
-      throw new Error(`Cannot create Order ${err}`);
+      throw new Error(`(model) Cannot create Order / Error: ${err}`);
     }
   }
 
-  async edit(o: Order): Promise<Order> {
+  // update order status from active to complete
+  async updateStatusComplete(id: string): Promise<Order> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'UPDATE orders SET user_id=($2), status=($3) WHERE id=($1) RETURNING *';
-      const result = await conn.query(sql, [o.id, o.user_id, o.status]);
+      const sql = 'UPDATE orders SET status=($2) WHERE id=($1) RETURNING *';
+      const result = await conn.query(sql, [id, 'complete']);
       conn.release();
-      return result.rows[0];
+      return result;
     } catch (err) {
-      throw new Error(`Cannot edit Order ${err}`);
+      throw new Error(`(model) Cannot complete Order ${id} / Error: ${err}`);
     }
   }
 
-  async delete(id: string): Promise<Order> {
-    try {
-      // @ts-ignore
-      const conn = await Client.connect();
-      const sql = 'DELETE FROM orders WHERE id=($1) RETURNING *';
-      const result = await conn.query(sql, [id]);
-      conn.release();
-      return result.rows[0];
-    } catch (err) {
-      throw new Error(`Cannot delete Order ${err}`);
-    }
-  }
-
+  // add a Product to order_products (join table)
+  // references to orders.id and products.id
   async addProduct(
     order_id: string,
-    product_id: number,
+    product_id: string,
     quantity: number
   ): Promise<{ id: number; order_id: string; product_id: string; quantity: number }> {
     try {
@@ -62,15 +53,59 @@ export class OrderStore {
       conn.release();
       return order;
     } catch (err) {
-      throw new Error(`Cannot add Product to Order ${err}`);
+      throw new Error(`(model) Cannot add Product ${product_id} to Order ${order_id} / Error: ${err}`);
     }
   }
 
-  async currentOrders(id: string): Promise<Order[]> {
+  // update quantity in order_products (join table)
+  async updateQuantity(
+    id: string,
+    quantity: number
+  ): Promise<{ id: number; order_id: string; product_id: string; quantity: number }> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'SELECT * FROM orders WHERE status=($1) AND user_id=($2)';
+      const sql = 'UPDATE order_products SET quantity=($2) WHERE id=($1) RETURNING *';
+      const result = await conn.query(sql, [id, quantity]);
+      conn.release();
+      return result.rows[0];
+    } catch (err) {
+      throw new Error(`(model) Cannot update Quantity ${quantity} / Error: ${err}`);
+    }
+  }
+
+  // delete a product from order_products (join table)
+  async deleteProduct(id: string): Promise<Order> {
+    try {
+      // @ts-ignore
+      const conn = await Client.connect();
+      const sql = 'DELETE FROM order_products WHERE id=($1) RETURNING *';
+      const result = await conn.query(sql, [id]);
+      conn.release();
+      return result.rows[0];
+    } catch (err) {
+      throw new Error(`Cannot delete Order ${err}`);
+    }
+  }
+
+  // get the actice order with referenced products data from order_products table
+  async currentOrderByUser(id: string): Promise<
+    {
+      order_id: string;
+      user_name: string;
+      user_id: string;
+      name: string;
+      product_id: string;
+      price: number;
+      quantity: number;
+      sum_price: number;
+    }[]
+  > {
+    try {
+      // @ts-ignore
+      const conn = await Client.connect();
+      const sql =
+        'SELECT order_id, user_name, users.id AS user_id, products.name, product_id, price, SUM(quantity) AS quantity, price*SUM(quantity) AS sum_price FROM order_products INNER JOIN orders ON orders.id = order_products.order_id INNER JOIN users ON users.id = orders.user_id INNER JOIN products ON order_products.product_id=products.id WHERE user_id=($2) AND status=($1) GROUP BY product_id, order_id, user_name, users.id, products.name, products.price';
       const result = await conn.query(sql, ['active', id]);
       conn.release();
       return result.rows;
@@ -79,11 +114,24 @@ export class OrderStore {
     }
   }
 
-  async completedOrders(id: string): Promise<Order[]> {
+  // get the completed orders with referenced products data from order_products table
+  async completedOrdersByUser(id: string): Promise<
+    {
+      order_id: string;
+      user_name: string;
+      user_id: string;
+      name: string;
+      product_id: string;
+      price: number;
+      quantity: number;
+      sum_price: number;
+    }[]
+  > {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'SELECT * FROM orders WHERE status=($1) AND user_id=($2)';
+      const sql =
+        'SELECT order_id, user_name, users.id AS user_id, products.name, product_id, price, SUM(quantity) AS quantity, price*SUM(quantity) AS sum_price FROM order_products INNER JOIN orders ON orders.id = order_products.order_id INNER JOIN users ON users.id = orders.user_id INNER JOIN products ON order_products.product_id=products.id WHERE user_id=($2) AND status=($1) GROUP BY product_id, order_id, user_name, users.id, products.name, products.price';
       const result = await conn.query(sql, ['complete', id]);
       conn.release();
       return result.rows;
