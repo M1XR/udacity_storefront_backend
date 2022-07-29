@@ -7,7 +7,7 @@ export const verifyNotActive = async (req: Request, res: Response, next: NextFun
     const sql = 'SELECT status FROM orders WHERE id=($1)';
     //@ts-ignore
     const conn = await Client.connect();
-    const result = await conn.query(sql, [req.params.id]);
+    const result = await conn.query(sql, [req.body.order_id]);
     const order = result.rows[0];
     conn.release();
 

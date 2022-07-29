@@ -30,7 +30,7 @@ export class OrderStore {
       const sql = 'UPDATE orders SET status=($2) WHERE id=($1) RETURNING *';
       const result = await conn.query(sql, [id, 'complete']);
       conn.release();
-      return result;
+      return result.rows[0];
     } catch (err) {
       throw new Error(`(model) Cannot complete Order ${id} / Error: ${err}`);
     }
@@ -49,7 +49,6 @@ export class OrderStore {
       const conn = await Client.connect();
       const result = await conn.query(sql, [order_id, product_id, quantity]);
       const order = result.rows[0];
-      console.log(order);
       conn.release();
       return order;
     } catch (err) {
@@ -106,7 +105,7 @@ export class OrderStore {
       // @ts-ignore
       const conn = await Client.connect();
       const sql =
-        'SELECT order_id, user_name, users.id AS user_id, products.name, product_id, price, SUM(quantity) AS quantity, price*SUM(quantity) AS sum_price FROM order_products INNER JOIN orders ON orders.id = order_products.order_id INNER JOIN users ON users.id = orders.user_id INNER JOIN products ON order_products.product_id=products.id WHERE user_id=($2) AND status=($1) GROUP BY product_id, order_id, user_name, users.id, products.name, products.price';
+        'SELECT order_id, user_name, users.id AS user_id, products.name, product_id, price, SUM(quantity) AS quantity, price*SUM(quantity) AS sum_price FROM order_products INNER JOIN orders ON orders.id = order_products.order_id INNER JOIN users ON users.id = orders.user_id INNER JOIN products ON order_products.product_id=products.id WHERE user_id=($2) AND status=($1) GROUP BY product_id, order_id, user_name, users.id, products.name, products.price ORDER BY order_id DESC';
       const result = await conn.query(sql, ['active', userId]);
       conn.release();
       return result.rows;
@@ -132,7 +131,7 @@ export class OrderStore {
       // @ts-ignore
       const conn = await Client.connect();
       const sql =
-        'SELECT order_id, user_name, users.id AS user_id, products.name, product_id, price, SUM(quantity) AS quantity, price*SUM(quantity) AS sum_price FROM order_products INNER JOIN orders ON orders.id = order_products.order_id INNER JOIN users ON users.id = orders.user_id INNER JOIN products ON order_products.product_id=products.id WHERE user_id=($2) AND status=($1) GROUP BY product_id, order_id, user_name, users.id, products.name, products.price';
+        'SELECT order_id, user_name, users.id AS user_id, products.name, product_id, price, SUM(quantity) AS quantity, price*SUM(quantity) AS sum_price FROM order_products INNER JOIN orders ON orders.id = order_products.order_id INNER JOIN users ON users.id = orders.user_id INNER JOIN products ON order_products.product_id=products.id WHERE user_id=($2) AND status=($1) GROUP BY product_id, order_id, user_name, users.id, products.name, products.price ORDER BY order_id DESC';
       const result = await conn.query(sql, ['complete', userId]);
       conn.release();
       return result.rows;

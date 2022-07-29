@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Order, OrderStore } from '../models/order.model';
+import { OrderStore } from '../models/order.model';
 import { verifyNotActive, verifyNotComplete } from '../middleware/verifyOrderStatus';
 import verifyAuthToken from '../middleware/verifyAuthToken';
 
@@ -96,12 +96,12 @@ const completedOrdersByUser = async (req: Request, res: Response) => {
 };
 
 const orderRoutes = (app: express.Application) => {
-  app.post('/orders/add/product', verifyAuthToken, verifyNotActive, addProduct);
-  app.delete('/orders/delete/product', verifyAuthToken, deleteProduct);
-  app.put('/orders/update/quantity', verifyAuthToken, updateQuantity);
-  app.put('/orders/update/status/:id', verifyAuthToken, verifyNotComplete, updateStatusComplete);
-  app.get('/orders/current-by-user/:userId', verifyAuthToken, currentOrderByUser);
-  app.get('/orders/completed-by-user/:userId', verifyAuthToken, completedOrdersByUser);
+  app.post('/orders/add-product', verifyAuthToken, verifyNotActive, addProduct);
+  app.delete('/orders/delete-product', verifyAuthToken, deleteProduct);
+  app.put('/orders/update-qty', verifyAuthToken, updateQuantity);
+  app.put('/orders/update-status/:id', verifyAuthToken, verifyNotComplete, updateStatusComplete);
+  app.get('/orders/curr-by-user/:userId', verifyAuthToken, currentOrderByUser);
+  app.get('/orders/com-by-user/:userId', verifyAuthToken, completedOrdersByUser);
   app.post('/orders/:userId', verifyAuthToken, create);
 };
 

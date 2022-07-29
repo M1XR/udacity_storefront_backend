@@ -20,8 +20,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 }
 ```
 
-- [OPTIONAL] Top 5 most popular products `[GET]` `/products/popular`
-- [OPTIONAL] Products by category (args: product category) `[GET]` `/products/category/:category`
+- Top 5 most popular products `[GET]` `/products/popular`
+- Products by category (args: product category) `[GET]` `/products/category/:category`
 
 #### Users
 
@@ -38,33 +38,72 @@ These are the notes from a meeting with the frontend developer that describe wha
 }
 ```
 
-- Authenticate `[GET]` `/users/auth`
+- Authenticate [token required] `[GET]` `/users/auth`
 
 #### Orders
 
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+- Current Order by user (args: user id) [token required] `[GET]` `/orders/curr-by-user/:userId`
+
+- Completed Orders by user (args: user id)[token required] `[GET]` `/orders/comp-by-user/:userId`
+
+- Create [token required] `[POST]` `/orders/:userId`
+
+- Update Order Status to complete [token required] `[PUT]` `/orders/update-status/:id`
+
+- Add a Product [token required] `[POST]` `/orders/add-product`
+
+```
+{
+  "order_id": string,
+  "product_id": string,
+  "quantity": number
+}
+```
+
+- Update Quantity of a Product [token required] `[PUT]` `/orders/update-qty`
+
+```
+{
+  "order_id": string,
+  "product_id": string,
+  "quantity": number
+}
+```
+
+- Delete a Product [token required] `[DELETE]` `/orders/delete-product`
+
+```
+{
+  "order_id": string,
+  "product_id": string
+}
+```
 
 ## Data Shapes
 
-#### Product
+#### TABLE: products
 
-- id
-- name
-- price
-- [OPTIONAL] category
+- id SERIAL PRIMARY KEY
+- name VARCHAR(200)
+- price DECIMAL(10, 2)
+- category VARCHAR(200)
 
-#### User
+#### TABLE: users
 
-- id
-- firstName
-- lastName
-- password
+- id SERIAL PRIMARY KEY
+- first_name VARCHAR(50)
+- last_name VARCHAR(50)
+- password_digest VARCHAR(80)
 
-#### Orders
+#### TABLE: orders
 
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+- id SERIAL PRIMARY KEY
+- user_id BIGINT REFERENCES users(id)
+- status VARCHAR(8)
+
+#### TABLE: order_produtcs (join table)
+
+- id SERIAL PRIMARY KEY
+- order_id BIGINT REFERENCES orders(id)
+- product_id BIGINT REFERENCES products(id)
+- quantity INTEGER
