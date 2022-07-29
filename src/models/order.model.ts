@@ -9,12 +9,12 @@ export type Order = {
 
 export class OrderStore {
   // create new order with status='active'
-  async create(o: Order): Promise<Order> {
+  async create(userId: string): Promise<Order> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
       const sql = 'INSERT INTO orders (user_id, status) VALUES($1, $2) RETURNING *';
-      const result = await conn.query(sql, [o.user_id, 'active']);
+      const result = await conn.query(sql, [userId, 'active']);
       conn.release();
       return result.rows[0];
     } catch (err) {
@@ -59,14 +59,15 @@ export class OrderStore {
 
   // update quantity in order_products (join table)
   async updateQuantity(
-    id: string,
+    order_id: string,
+    product_id: string,
     quantity: number
   ): Promise<{ id: number; order_id: string; product_id: string; quantity: number }> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'UPDATE order_products SET quantity=($2) WHERE id=($1) RETURNING *';
-      const result = await conn.query(sql, [id, quantity]);
+      const sql = 'UPDATE order_products SET quantity=($3) WHERE order_id=($1) AND product_id=($2) RETURNING *';
+      const result = await conn.query(sql, [order_id, product_id, quantity]);
       conn.release();
       return result.rows[0];
     } catch (err) {
@@ -75,21 +76,21 @@ export class OrderStore {
   }
 
   // delete a product from order_products (join table)
-  async deleteProduct(id: string): Promise<Order> {
+  async deleteProduct(order_id: string, product_id: string): Promise<string> {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'DELETE FROM order_products WHERE id=($1) RETURNING *';
-      const result = await conn.query(sql, [id]);
+      const sql = 'DELETE FROM order_products WHERE order_id=($1) AND product_id=($2)';
+      const result = await conn.query(sql, [order_id, product_id]);
       conn.release();
-      return result.rows[0];
+      return `Product ${product_id} was deleted from Order ${order_id}`;
     } catch (err) {
       throw new Error(`Cannot delete Order ${err}`);
     }
   }
 
   // get the actice order with referenced products data from order_products table
-  async currentOrderByUser(id: string): Promise<
+  async currentOrderByUser(userId: string): Promise<
     {
       order_id: string;
       user_name: string;
@@ -106,7 +107,7 @@ export class OrderStore {
       const conn = await Client.connect();
       const sql =
         'SELECT order_id, user_name, users.id AS user_id, products.name, product_id, price, SUM(quantity) AS quantity, price*SUM(quantity) AS sum_price FROM order_products INNER JOIN orders ON orders.id = order_products.order_id INNER JOIN users ON users.id = orders.user_id INNER JOIN products ON order_products.product_id=products.id WHERE user_id=($2) AND status=($1) GROUP BY product_id, order_id, user_name, users.id, products.name, products.price';
-      const result = await conn.query(sql, ['active', id]);
+      const result = await conn.query(sql, ['active', userId]);
       conn.release();
       return result.rows;
     } catch (err) {
@@ -115,7 +116,7 @@ export class OrderStore {
   }
 
   // get the completed orders with referenced products data from order_products table
-  async completedOrdersByUser(id: string): Promise<
+  async completedOrdersByUser(userId: string): Promise<
     {
       order_id: string;
       user_name: string;
@@ -132,7 +133,7 @@ export class OrderStore {
       const conn = await Client.connect();
       const sql =
         'SELECT order_id, user_name, users.id AS user_id, products.name, product_id, price, SUM(quantity) AS quantity, price*SUM(quantity) AS sum_price FROM order_products INNER JOIN orders ON orders.id = order_products.order_id INNER JOIN users ON users.id = orders.user_id INNER JOIN products ON order_products.product_id=products.id WHERE user_id=($2) AND status=($1) GROUP BY product_id, order_id, user_name, users.id, products.name, products.price';
-      const result = await conn.query(sql, ['complete', id]);
+      const result = await conn.query(sql, ['complete', userId]);
       conn.release();
       return result.rows;
     } catch (err) {

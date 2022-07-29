@@ -8,11 +8,8 @@ const store = new OrderStore();
 // create new order with status='active'
 const create = async (req: Request, res: Response) => {
   try {
-    const order: Order = {
-      user_id: req.body.user_id,
-      status: req.body.status
-    };
-    const newOrder = await store.create(order);
+    const user_id = req.params.userId;
+    const newOrder = await store.create(user_id);
     res.json(newOrder);
   } catch (err) {
     res.status(400);
@@ -34,12 +31,12 @@ const updateStatusComplete = async (req: Request, res: Response) => {
 // add a Product to order_products (join table)
 // references to orders.id and products.id
 const addProduct = async (req: Request, res: Response) => {
-  const orderId: string = req.params.id;
-  const productId: string = req.body.product_id;
+  const order_id: string = req.body.order_id;
+  const product_id: string = req.body.product_id;
   const quantity: number = req.body.quantity;
 
   try {
-    const addedProduct = await store.addProduct(orderId, productId, quantity);
+    const addedProduct = await store.addProduct(order_id, product_id, quantity);
     res.json(addedProduct);
   } catch (err) {
     res.status(400);
@@ -50,10 +47,11 @@ const addProduct = async (req: Request, res: Response) => {
 // update quantity in order_products (join table)
 const updateQuantity = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
+    const order_id = req.body.order_id;
+    const product_id = req.body.product_id;
     const quantity = req.body.quantity;
 
-    const editedOrder = await store.updateQuantity(id, quantity);
+    const editedOrder = await store.updateQuantity(order_id, product_id, quantity);
     res.json(editedOrder);
   } catch (err) {
     res.status(400);
@@ -64,7 +62,10 @@ const updateQuantity = async (req: Request, res: Response) => {
 // delete a product from order_products (join table)
 const deleteProduct = async (req: Request, res: Response) => {
   try {
-    const result = await store.deleteProduct(req.params.id);
+    const order_id = req.body.order_id;
+    const product_id = req.body.product_id;
+
+    const result = await store.deleteProduct(order_id, product_id);
     res.json(result);
   } catch (err) {
     res.status(400);
@@ -75,7 +76,7 @@ const deleteProduct = async (req: Request, res: Response) => {
 // get the actice order with referenced products data from order_products table
 const currentOrderByUser = async (req: Request, res: Response) => {
   try {
-    const orders = await store.currentOrderByUser(req.params.id);
+    const orders = await store.currentOrderByUser(req.params.userId);
     res.json(orders);
   } catch (err) {
     res.status(400);
@@ -86,7 +87,7 @@ const currentOrderByUser = async (req: Request, res: Response) => {
 // get the completed orders with referenced products data from order_products table
 const completedOrdersByUser = async (req: Request, res: Response) => {
   try {
-    const orders = await store.completedOrdersByUser(req.params.id);
+    const orders = await store.completedOrdersByUser(req.params.userId);
     res.json(orders);
   } catch (err) {
     res.status(400);
@@ -95,13 +96,13 @@ const completedOrdersByUser = async (req: Request, res: Response) => {
 };
 
 const orderRoutes = (app: express.Application) => {
-  app.post('/orders', verifyAuthToken, create);
-  app.post('/orders/add-product/:id', verifyAuthToken, verifyNotActive, addProduct);
-  app.delete('/orders/delete-product/:id', verifyAuthToken, deleteProduct);
-  app.put('/orders/update-quantity/:id', verifyAuthToken, updateQuantity);
-  app.put('/orders/update-status/:id', verifyAuthToken, verifyNotComplete, updateStatusComplete);
-  app.get('/orders/current/:id', verifyAuthToken, currentOrderByUser);
-  app.get('/orders/completed/:id', verifyAuthToken, completedOrdersByUser);
+  app.post('/orders/add/product', verifyAuthToken, verifyNotActive, addProduct);
+  app.delete('/orders/delete/product', verifyAuthToken, deleteProduct);
+  app.put('/orders/update/quantity', verifyAuthToken, updateQuantity);
+  app.put('/orders/update/status/:id', verifyAuthToken, verifyNotComplete, updateStatusComplete);
+  app.get('/orders/current-by-user/:userId', verifyAuthToken, currentOrderByUser);
+  app.get('/orders/completed-by-user/:userId', verifyAuthToken, completedOrdersByUser);
+  app.post('/orders/:userId', verifyAuthToken, create);
 };
 
 export default orderRoutes;
