@@ -24,7 +24,7 @@ export class ProductStore {
     }
   }
 
-  // show product with specific id
+  // get specific product by id
   async show(id: string): Promise<Product> {
     try {
       // @ts-ignore
@@ -38,7 +38,7 @@ export class ProductStore {
     }
   }
 
-  // create product
+  // create new product
   async create(p: Product): Promise<Product> {
     try {
       // @ts-ignore

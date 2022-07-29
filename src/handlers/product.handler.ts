@@ -15,7 +15,7 @@ const index = async (_req: Request, res: Response) => {
   }
 };
 
-// show product with specific id
+// get specific product by id
 const show = async (req: Request, res: Response) => {
   try {
     const product = await store.show(req.params.id);
@@ -26,7 +26,7 @@ const show = async (req: Request, res: Response) => {
   }
 };
 
-//  create product
+//  create new product
 const create = async (req: Request, res: Response) => {
   try {
     const product: Product = {
