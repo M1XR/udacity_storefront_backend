@@ -4,7 +4,8 @@ import verifyAuthToken from '../middleware/verifyAuthToken';
 
 const store = new ProductStore();
 
-const index = async (req: Request, res: Response) => {
+// get all products
+const index = async (_req: Request, res: Response) => {
   try {
     const products = await store.index();
     res.json(products);
@@ -14,6 +15,7 @@ const index = async (req: Request, res: Response) => {
   }
 };
 
+// show product with specific id
 const show = async (req: Request, res: Response) => {
   try {
     const product = await store.show(req.params.id);
@@ -24,6 +26,7 @@ const show = async (req: Request, res: Response) => {
   }
 };
 
+//  create product
 const create = async (req: Request, res: Response) => {
   try {
     const product: Product = {
@@ -40,10 +43,34 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
+// get products by specific category
+const getByCategory = async (req: Request, res: Response) => {
+  try {
+    const products = await store.byCategory(req.params.category);
+    res.json(products);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
+};
+
+// get the five most popular products
+const getPopularProducts = async (_req: Request, res: Response) => {
+  try {
+    const products = await store.popularProducts();
+    res.json(products);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
+};
+
 const productRoutes = (app: express.Application) => {
-  app.get('/api/products', verifyAuthToken, index);
-  app.get('/api/products/:id', show);
-  app.post('/api/products', verifyAuthToken, create);
+  app.get('/products/popular', getPopularProducts);
+  app.get('/products/category/:category', getByCategory);
+  app.get('/products/:id', show);
+  app.get('/products', index);
+  app.post('/products', verifyAuthToken, create);
 };
 
 export default productRoutes;
