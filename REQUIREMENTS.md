@@ -8,101 +8,43 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Products
 
-- **Index**
-
-  - `[GET]`
-  - `/api/products`
-
-- **Show**
-
-  - `[GET]`
-  - `/api/products/:id`
-
-- **Create** [token required]
-
-  - `[POST]`
-  - `/api/products`
-  - Request Body:
-
-  ```
-  {
-    "name": string,
-    "price": number,
-    "category": string,
-  }
-  ```
-
-- **Top 5 most popular products**
-
-  - `[GET]`
-  - `/api/products-popular`
-
-- **Products by category** (args: product category)
-
-  - `[GET]`
-  - `/api/products-category/:category`
+- Index
+- Show
+- Create [token required]
+- [OPTIONAL] Top 5 most popular products
+- [OPTIONAL] Products by category (args: product category)
 
 #### Users
 
-- **Index** [token required]
-
-  - `[GET]`
-  - `/api/users`
-
-- **Show** [token required]
-
-  - `[GET]`
-  - `/api/users/:id`
-
-- **Create** [token required]
-
-  - `[POST]`
-  - `/api/users`
-  - Request Body:
-
-  ```
-  {
-    "user_name": string,
-    "first_name": string,
-    "last_name": string,
-    "password": string
-  }
-  ```
+- Index [token required]
+- Show [token required]
+- Create N[token required]
 
 #### Orders
 
-- **Current Order by user** (args: user id) [token required]
-
-  - `[GET]`
-  - `/api/orders-current/:user_id`
-
-- **Completed Orders by user** (args: user id) [token required]
-
-  - `[GET]`
-  - `/api/orders-completed/:user_id`
+- Current Order by user (args: user id)[token required]
+- [OPTIONAL] Completed Orders by user (args: user id)[token required]
 
 ## Data Shapes
 
-#### products
+#### Product
 
-| id                 | name         | price   | category     |
-| ------------------ | ------------ | ------- | ------------ |
-| SERIAL PRIMARY KEY | VARCHAR(200) | INTEGER | VARCHAR(200) |
+- id
+- name
+- price
+- [OPTIONAL] category
 
-#### users
+#### User
 
-| id                 | user_name   | first_name  | last_name   | password    |
-| ------------------ | ----------- | ----------- | ----------- | ----------- |
-| SERIAL PRIMARY KEY | VARCHAR(50) | VARCHAR(50) | VARCHAR(50) | VARCHAR(80) |
+- id
+- firstName
+- lastName
+- password
 
-#### orders
+#### Orders
 
-| id                 | user_id                     | status     |
-| ------------------ | --------------------------- | ---------- |
-| SERIAL PRIMARY KEY | BIGINT REFERENCES users(id) | VARCHAR(8) |
-
-#### order_products (Join-Table)
-
-| id                 | order_id                     | product_id                    | quantity |
-| ------------------ | ---------------------------- | ----------------------------- | -------- |
-| SERIAL PRIMARY KEY | BIGINT REFERENCES orders(id) | BIGINT REFERENCES product(id) | INTEGER  |
+- id
+- id of each product in the order
+- quantity of each product in the order
+- user_id
+- status of order (active or complete)

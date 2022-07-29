@@ -43,7 +43,7 @@ const create = async (req: Request, res: Response) => {
 const productRoutes = (app: express.Application) => {
   app.get('/api/products', verifyAuthToken, index);
   app.get('/api/products/:id', show);
-  app.post('/api/products', create);
+  app.post('/api/products', verifyAuthToken, create);
 };
 
 export default productRoutes;

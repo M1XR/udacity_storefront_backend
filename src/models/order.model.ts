@@ -47,13 +47,18 @@ export class OrderStore {
     }
   }
 
-  async addProduct(order_id: string, product_id: string, quantity: number): Promise<Order> {
+  async addProduct(
+    order_id: string,
+    product_id: number,
+    quantity: number
+  ): Promise<{ id: number; order_id: string; product_id: string; quantity: number }> {
     try {
-      const sql = 'INSERT INTO order_products (order_id, product_id, quantity) VALUES($1, $2, $3)';
+      const sql = 'INSERT INTO order_products (order_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *';
       // @ts-ignore
       const conn = await Client.connect();
       const result = await conn.query(sql, [order_id, product_id, quantity]);
       const order = result.rows[0];
+      console.log(order);
       conn.release();
       return order;
     } catch (err) {

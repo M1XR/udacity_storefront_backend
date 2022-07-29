@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { User, UserStore } from '../models/user.model';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import verifyAuthToken from '../middleware/verifyAuthToken';
 
 dotenv.config();
 const { TOKEN_SECRET } = process.env;
@@ -57,10 +58,10 @@ const authenticate = async (req: Request, res: Response) => {
 };
 
 const userRoutes = (app: express.Application) => {
-  app.get('/api/users', index);
-  app.get('/api/users/:id', show);
+  app.get('/api/users', verifyAuthToken, index);
+  app.get('/api/users/:id', verifyAuthToken, show);
   app.post('/api/users', create);
-  app.get('/api/auth', authenticate);
+  app.get('/api/auth', verifyAuthToken, authenticate);
 };
 
 export default userRoutes;

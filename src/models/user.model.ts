@@ -64,17 +64,10 @@ export class UserStore {
       const result = await conn.query(sql, [user_name]);
       conn.release();
 
-      console.log(password + BCRYPT_PW);
-      console.log(result.rows[0]);
-
       if (result.rows.length) {
         const user = result.rows[0];
 
-        console.log(user);
-        console.log(user.password_digest);
-
         if (bcrypt.compareSync(password + BCRYPT_PW, user.password_digest)) {
-          console.log('bcrypt compare');
           return user;
         }
       }

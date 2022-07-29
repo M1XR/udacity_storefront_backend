@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { Order, OrderStore } from '../models/order.model';
 import verifyOrderStatus from '../middleware/verifyOrderStatus';
+import verifyAuthToken from '../middleware/verifyAuthToken';
 
 const store = new OrderStore();
 
@@ -45,12 +46,12 @@ const destroy = async (req: Request, res: Response) => {
 
 const addProduct = async (req: Request, res: Response) => {
   const orderId: string = req.params.id;
-  const productId: string = req.body.product_id;
+  const productId: number = req.body.product_id;
   const quantity: number = req.body.quantity;
 
   try {
     const addedProduct = await store.addProduct(orderId, productId, quantity);
-    res.json(addProduct);
+    res.json(addedProduct);
   } catch (err) {
     res.status(400);
     res.json(err);
@@ -78,12 +79,12 @@ const completed = async (req: Request, res: Response) => {
 };
 
 const orderRoutes = (app: express.Application) => {
-  app.post('/api/orders', create);
-  app.put('/api/orders', edit);
-  app.delete('/api/orders/:id', destroy);
-  app.post('/api/orders/:id/products', verifyOrderStatus, addProduct);
-  app.get('/api/orders-current/:id', current);
-  app.get('/api/orders-complete/:id', completed);
+  app.post('/api/orders', verifyAuthToken, create);
+  app.put('/api/orders', verifyAuthToken, edit);
+  app.delete('/api/orders/:id', verifyAuthToken, destroy);
+  app.post('/api/orders/:id/products', verifyAuthToken, verifyOrderStatus, addProduct);
+  app.get('/api/orders/:id/current', verifyAuthToken, current);
+  app.get('/api/orders/:id/complete', verifyAuthToken, completed);
 };
 
 export default orderRoutes;

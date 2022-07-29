@@ -7,7 +7,7 @@ const verifyOrderStatus = async (req: Request, res: Response, next: NextFunction
     const sql = 'SELECT status FROM orders WHERE id=($1)';
     //@ts-ignore
     const conn = await Client.connect();
-    const result = await conn.query(sql, [req.body.order_id]);
+    const result = await conn.query(sql, [req.params.id]);
     const order = result.rows[0];
     conn.release();
 
