@@ -8,17 +8,17 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Products
 
-- Index
-- Show
-- Create [token required]
-- [OPTIONAL] Top 5 most popular products
-- [OPTIONAL] Products by category (args: product category)
+- Index `[GET]` `/products`
+- Show `[GET]` `/products/:id`
+- Create [token required] `[POST]` `/products` `{ name: string, price: number, category: string }`
+- [OPTIONAL] Top 5 most popular products `[GET]` `/products/popular`
+- [OPTIONAL] Products by category (args: product category) `[GET]` `/products/category/:category`
 
 #### Users
 
 - Index [token required]
 - Show [token required]
-- Create N[token required]
+- Create
 
 #### Orders
 
