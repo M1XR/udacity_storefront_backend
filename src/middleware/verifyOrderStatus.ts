@@ -12,14 +12,14 @@ const verifyOrderStatus = async (req: Request, res: Response, next: NextFunction
     conn.release();
 
     if (order.status !== 'active') {
-      throw new Error(
-        `Could not add product ${req.body.product_id} to order ${req.body.order_id} because order status is ${order.status}`
+      res.json(
+        `Could not add product ${req.body.product_id} to order ${req.params.id} because order status is ${order.status}`
       );
     } else {
       next();
     }
   } catch (err) {
-    throw new Error(err as string);
+    res.json(err as string);
   }
 };
 
