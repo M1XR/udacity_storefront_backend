@@ -1,3 +1,20 @@
+Dear reviewer,
+
+i have send the ENV variables inside the student notes in the submit section as in the rubric recommended. In case you didn't see them, here are the variables below:
+
+ENV=dev
+PG_HOST=localhost
+PG_DB=db_shopping
+PG_DB_TEST=db_shopping_test
+PG_USER=shopping_client
+PG_PW=password123
+PG_DR=pg
+BCRYPT_PW=123abrakadabra!
+SALT_ROUNDS=10
+TOKEN_SECRET=987simsalabim!
+
+best regards
+
 # Storefront Backend Project
 
 ## Description
