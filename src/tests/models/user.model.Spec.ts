@@ -1,9 +1,5 @@
-import { ProductStore } from '../../models/product.model';
-import { OrderStore } from '../../models/order.model';
 import { UserStore } from '../../models/user.model';
 
-const order = new OrderStore();
-const prod = new ProductStore();
 const user = new UserStore();
 
 describe('User Model', () => {

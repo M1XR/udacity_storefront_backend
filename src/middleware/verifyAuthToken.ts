@@ -9,6 +9,7 @@ const verifyAuthToken = (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization as string;
     const token = authHeader.split(' ')[1];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const decoded = jwt.verify(token, TOKEN_SECRET as string);
     next();
   } catch (err) {

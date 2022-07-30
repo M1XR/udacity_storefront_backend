@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-ignore
 import Client from '../database';
 
@@ -5,6 +6,9 @@ export type Order = {
   id?: number;
   user_id?: string;
   status?: string;
+  order_id?: string;
+  product_id?: string;
+  quantity?: number;
 };
 
 export class OrderStore {
@@ -38,11 +42,7 @@ export class OrderStore {
 
   // add a Product to order_products (join table)
   // references to orders.id and products.id
-  async addProduct(
-    order_id: string,
-    product_id: string,
-    quantity: number
-  ): Promise<{ id: number; order_id: string; product_id: string; quantity: number }> {
+  async addProduct(order_id: string, product_id: string, quantity: number): Promise<Order> {
     try {
       const sql = 'INSERT INTO order_products (order_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *';
       // @ts-ignore
@@ -57,11 +57,7 @@ export class OrderStore {
   }
 
   // update quantity in order_products (join table)
-  async updateQuantity(
-    order_id: string,
-    product_id: string,
-    quantity: number
-  ): Promise<{ id: number; order_id: string; product_id: string; quantity: number }> {
+  async updateQuantity(order_id: string, product_id: string, quantity: number): Promise<Order> {
     try {
       // @ts-ignore
       const conn = await Client.connect();

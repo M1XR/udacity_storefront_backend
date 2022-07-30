@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-ignore
 import Client from '../database';
 
@@ -57,7 +58,7 @@ export class ProductStore {
     try {
       // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'SELECT id, name, price FROM products WHERE category=($1)';
+      const sql = 'SELECT * FROM products WHERE category=($1)';
       const result = await conn.query(sql, [cat]);
       conn.release();
       return result.rows;
@@ -74,7 +75,7 @@ export class ProductStore {
       //@ts-ignore
       const conn = await Client.connect();
       const sql =
-        'SELECT name, price, category FROM products INNER JOIN order_products ON products.id = order_products.product_id GROUP BY products.id ORDER BY COUNT(order_products.product_id) DESC LIMIT 5';
+        'SELECT * FROM products INNER JOIN order_products ON products.id = order_products.product_id GROUP BY products.id ORDER BY COUNT(order_products.product_id) DESC LIMIT 5';
       const result = await conn.query(sql);
       conn.release();
       return result.rows;

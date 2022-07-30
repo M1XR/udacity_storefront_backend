@@ -81,6 +81,33 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## Data Shapes
 
+#### Product
+
+- id: number
+- name: string
+- price: number
+- category: string
+
+#### User
+
+- id: number
+- user_name: string
+- first_name: string
+- last_name: string
+- password: string
+- password_digest: string
+
+#### Orders
+
+- id: number
+- user_id: string
+- status: string (active or complete)
+- order_id: string
+- product_id: string
+- quantity: number
+
+## Tables
+
 #### TABLE: products
 
 - id SERIAL PRIMARY KEY
